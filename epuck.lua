@@ -38,8 +38,8 @@ threadFunction=function()
 					print('A')
 				end
 				if (state=='estadoInicial') then
-					velLeft=velLeft+maxVel*braitSideSens_leftMotor[1]*(1-(proxSensDist[1]/noDetectionDistance))
-					velRight=velRight+maxVel*braitSideSens_leftMotor[2]*(1-(proxSensDist[1]/noDetectionDistance))
+					velLeft=velLeft+maxVel*sideSensorWeights[1]*(1-(proxSensDist[1]/noDetectionDistance))
+					velRight=velRight+maxVel*sideSensorWeights[2]*(1-(proxSensDist[1]/noDetectionDistance))
 				end
 			end
 			if (proxSensDist[6]>0.25*noDetectionDistance) then
@@ -47,8 +47,8 @@ threadFunction=function()
 					print('B')
 				end
 				if (state=='estadoInicial') then
-					velLeft=velLeft+maxVel*braitSideSens_leftMotor[2]*(1-(proxSensDist[6]/noDetectionDistance))
-					velRight=velRight+maxVel*braitSideSens_leftMotor[1]*(1-(proxSensDist[6]/noDetectionDistance))
+					velLeft=velLeft+maxVel*sideSensorWeights[2]*(1-(proxSensDist[6]/noDetectionDistance))
+					velRight=velRight+maxVel*sideSensorWeights[1]*(1-(proxSensDist[6]/noDetectionDistance))
 				end
 			end
 		-- alguma coisa à frente
@@ -73,8 +73,8 @@ threadFunction=function()
 			-- Obstacle in front. Use Braitenberg to avoid it
 			for i=1,4,1 do
 				if (state=='estadoInicial') then
-					velLeft=velLeft+maxVel*braitFrontSens_leftMotor[i]*(1-(proxSensDist[1+i]/noDetectionDistance))
-					velRight=velRight+maxVel*braitFrontSens_leftMotor[5-i]*(1-(proxSensDist[1+i]/noDetectionDistance))
+					velLeft=velLeft+maxVel*frontSensorWeights[i]*(1-(proxSensDist[1+i]/noDetectionDistance))
+					velRight=velRight+maxVel*frontSensorWeights[5-i]*(1-(proxSensDist[1+i]/noDetectionDistance))
 				end
 			end
 		end
@@ -106,21 +106,12 @@ end
 maxVel=120*math.pi/180
 ledColors={{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0},{0,0,0}}
 
--- Braitenberg weights for the 4 front prox sensors (avoidance):
-braitFrontSens_leftMotor={8,16,-2,-1}
--- Braitenberg weights for the 2 side prox sensors (following):
-braitSideSens_leftMotor={-1,0}
--- Braitenberg weights for the 8 sensors (following):
-braitAllSensFollow_leftMotor={-3,-1.5,-0.5,0.8,1,0,0,-4}
-braitAllSensFollow_rightMotor={0,1,0.8,-0.5,-1.5,-3,-4,0}
-braitAllSensAvoid_leftMotor={0,0.5,1,-1,-0.5,-0.5,0,0}
-braitAllSensAvoid_rightMotor={-0.5,-0.5,-1,1,0.5,0,0,0}
+-- sensor weights
+frontSensorWeights={8,16,-2,-1}
+sideSensorWeights={-1,0}
 
 -- Here we execute the regular thread code:
 res,err=xpcall(threadFunction,function(err) return debug.traceback(err) end)
 if not res then
 	simAddStatusbarMessage('Lua runtime error: '..err)
 end
-
--- Put some clean-up code here:
-
