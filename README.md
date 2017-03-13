@@ -2,7 +2,7 @@
 
 ## Context
 
-This paper consists on the second milestone for the subject of Robotics. The main goals are the familiarization with
+This project consists on the second milestone for the subject of Robotics. The main goals are the familiarization with
 robotics and, in our case, the V-REP platform. Secondly, to find and use the most interesting agent architecture for
 the development of a wall-following agent, acknowledge it's benefits and limitations by trying to follow walls.
 
